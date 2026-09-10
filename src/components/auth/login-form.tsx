@@ -2,25 +2,6 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
-
-function getSwedishAuthError(message: string) {
-  const normalized = message.toLowerCase();
-
-  if (normalized.includes("invalid login credentials")) {
-    return "Fel e-postadress eller lösenord.";
-  }
-
-  if (normalized.includes("email not confirmed")) {
-    return "E-postadressen är inte bekräftad ännu.";
-  }
-
-  if (normalized.includes("too many requests") || normalized.includes("rate limit")) {
-    return "För många försök. Vänta en stund och försök igen.";
-  }
-
-  return "Det gick inte att logga in. Kontrollera uppgifterna och försök igen.";
-}
 
 export function LoginForm({ configured }: { configured: boolean }) {
   const router = useRouter();
@@ -48,14 +29,15 @@ export function LoginForm({ configured }: { configured: boolean }) {
     setLoading(true);
 
     try {
-      const supabase = createClient();
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
+      const result = await response.json() as { error?: string };
 
-      if (signInError) {
-        setError(getSwedishAuthError(signInError.message));
+      if (!response.ok) {
+        setError(result.error ?? "Det gick inte att logga in. Kontrollera uppgifterna och försök igen.");
         return;
       }
 

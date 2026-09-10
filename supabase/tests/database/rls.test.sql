@@ -91,8 +91,8 @@ select extensions.is(
 
 select extensions.throws_ok(
   $$update public.profiles set role = 'school_admin' where id = '10000000-0000-0000-0000-000000000003'$$,
-  'P0001',
-  'Only a school administrator can change roles',
+  '42501',
+  null,
   'member cannot elevate their own role'
 );
 
@@ -169,12 +169,11 @@ select extensions.lives_ok(
   'school admin can create an item in their own school'
 );
 
-select extensions.results_eq(
-  $$update public.profiles set role = 'staff'
-    where id = '10000000-0000-0000-0000-000000000003'
-    returning role::text$$,
-  $$values ('staff'::text)$$,
-  'school admin can manage a role inside their own school'
+select extensions.throws_ok(
+  $$update public.profiles set role = 'staff' where id = '10000000-0000-0000-0000-000000000003'$$,
+  '42501',
+  null,
+  'school admin cannot manage roles directly'
 );
 
 select * from extensions.finish();

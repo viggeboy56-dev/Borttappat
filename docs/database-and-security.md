@@ -86,7 +86,7 @@ Testet i `supabase/tests/database/rls.test.sql` använder två skolor och kör f
 - en användare inte kan läsa en annan skolas privata föremålsbild;
 - en medlem inte kan skapa ett anspråk på en annan skolas föremål;
 - en medlem inte kan höja sin egen roll;
-- en skoladministratör kan hantera roller inom sin egen skola.
+- skoladministratörer kan läsa skolans användaröversikt men inte skapa användare eller ändra roller; personalens onboarding sköts av en global Borttappat-operatör.
 
 Gör samma kontroll manuellt i ett separat utvecklingsprojekt genom att logga in som respektive demokonto och använda publishable key. Testa aldrig RLS med en secret- eller service-role-nyckel eftersom den avsiktligt kringgår policies.
 
