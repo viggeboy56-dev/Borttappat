@@ -32,3 +32,5 @@ Se [Hittegods och bilder](docs/items-and-storage.md) för katalogen, publicering
 Se [Anspråk och utlämning](docs/claims-and-return.md) för medlemsflödet, personalens granskning, transaktionerna och testerna.
 
 Se [Operatörsstyrd onboarding](docs/administration-and-invitations.md) för operatörsbehörighet, skolskapande, bulkimport och personalens individuella engångslänkar.
+
+Se [Produktion på Vercel](docs/deployment.md) för miljövariabler, Supabase Auth-inställningar, deployment och röktest.

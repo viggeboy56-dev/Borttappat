@@ -30,7 +30,9 @@ export function InviteAcceptance({ token, email, fullName, schoolName, role, sig
         if (authError) throw authError;
         await accept();
       } else {
-        const { data, error: authError } = await supabase.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: window.location.href } });
+        const confirmationUrl = new URL("/auth/confirm", window.location.origin);
+        confirmationUrl.searchParams.set("next", window.location.pathname);
+        const { data, error: authError } = await supabase.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: confirmationUrl.toString() } });
         if (authError) throw authError;
         if (!data.session) { setNotice("Kontrollera din e-post och öppna bekräftelselänken. Gå sedan tillbaka till den här inbjudan."); return; }
         await accept();
