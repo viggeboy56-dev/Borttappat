@@ -3,7 +3,7 @@ set local role postgres;
 create extension if not exists pgtap with schema extensions;
 grant usage on schema extensions to postgres,authenticated;
 set local search_path=public,extensions;
-select extensions.plan(38);
+select extensions.plan(40);
 
 insert into auth.users(instance_id,id,aud,role,email,encrypted_password,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,created_at,updated_at) values
 ('00000000-0000-0000-0000-000000000000','80000000-0000-0000-0000-000000000001','authenticated','authenticated','operator-member@test.invalid','',now(),'{}','{}',now(),now()),
@@ -63,7 +63,9 @@ set local role postgres;
 select extensions.is((select count(*)::integer from public.profiles where id in('81000000-0000-0000-0000-000000000005','81000000-0000-0000-0000-000000000006')),0,'failed joins create no profiles');
 set local role authenticated; set local request.jwt.claim.sub='81000000-0000-0000-0000-000000000007';
 select public.join_school_as_member('medlemsskola-a','FELF-FELF-FELF-FELF','Många Försök') from generate_series(1,9);
+set local role postgres;
 select extensions.is((select count(*)::integer from private.member_join_attempts where user_id='81000000-0000-0000-0000-000000000007'),9,'failed code attempts are recorded privately');
+set local role authenticated;
 select public.join_school_as_member('medlemsskola-a','FELF-FELF-FELF-FELF','Många Försök');
 select extensions.is(public.join_school_as_member('medlemsskola-a','FELF-FELF-FELF-FELF','Många Försök'),'rate_limited','repeated wrong codes are rate limited');
 
@@ -76,9 +78,13 @@ set local role postgres;
 select extensions.is((select school_id::text from public.profiles where id='81000000-0000-0000-0000-000000000004'),'cc810000-0000-0000-0000-000000000001','school comes from slug lookup');
 select extensions.is((select role::text from public.profiles where id='81000000-0000-0000-0000-000000000004'),'member','role is always member');
 select extensions.is((select full_name from public.profiles where id='81000000-0000-0000-0000-000000000004'),'Ny Medlem','validated member name is stored');
-select extensions.ok(not extensions.has_function('public','join_school_as_member',array['text','text','text','uuid','user_role']),'no RPC signature accepts browser school or role values');
+select extensions.hasnt_function('public','join_school_as_member',array['text','text','text','uuid','user_role'],'no RPC signature accepts browser school or role values');
 
-set local role authenticated; set local request.jwt.claim.sub='81000000-0000-0000-0000-000000000003';
+set local role authenticated; set local request.jwt.claim.sub='81000000-0000-0000-0000-000000000001';
+select extensions.is(public.join_school_as_member('medlemsskola-a','CCCC-3333-DDDD-4444','Admin A'),'account_has_school_role','same-school school_admin is not downgraded');
+set local request.jwt.claim.sub='81000000-0000-0000-0000-000000000002';
+select extensions.is(public.join_school_as_member('medlemsskola-a','CCCC-3333-DDDD-4444','Personal A'),'account_has_school_role','same-school staff is not downgraded');
+set local request.jwt.claim.sub='81000000-0000-0000-0000-000000000003';
 select extensions.is(public.join_school_as_member('medlemsskola-a','CCCC-3333-DDDD-4444','Nytt Namn'),'already_member','same-school member is handled without duplicate');
 set local request.jwt.claim.sub='82000000-0000-0000-0000-000000000001';
 select extensions.is(public.join_school_as_member('medlemsskola-a','CCCC-3333-DDDD-4444','Medlem B'),'account_other_school','cross-school member is rejected');
