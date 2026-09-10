@@ -59,3 +59,15 @@ Utgångna, avbrutna och redan använda länkar nekas. Ett konto med profil i en 
 Inbjudningslänkar kopieras och skickas manuellt av operatören. Automatisk e-postleverans, publik skolregistrering, SSO, kommunadministration och produktiondriftsättning ingår inte i fas 6.
 
 Migreringen ska verifieras lokalt och får inte appliceras i det länkade utvecklingsprojektet utan ett separat godkännande.
+
+## Medlemsanslutning för föräldrar och elever
+
+**Skolan delar en medlemslänk och skolkod. Föräldern eller eleven skapar sitt konto och hamnar automatiskt på rätt skola.** Operatören aktiverar medlemsanslutning på skolans operatörssida. Länken följer formatet `/join/<skolans-identifierare>` och kan delas tillsammans med den slumpmässigt skapade skolkoden.
+
+Den råa skolkoden visas bara när anslutningen aktiveras eller koden byts. Databasen lagrar endast SHA-256-hashen. Ett kodbyte gör den gamla koden omedelbart ogiltig, och inaktivering stoppar alla nya anslutningar utan att påverka befintliga medlemmar.
+
+Den publika join-sidan kan endast slå upp skolans visningsnamn, identifierare och om anslutning är aktiv. Tabellen `schools`, medlemskonfiguration, användare, personal och hittegods blir inte publikt läsbara. Efter autentisering verifierar en smal databasfunktion skolkoden, hämtar skolan från URL-identifieraren och skapar alltid rollen `member`. Webbläsaren kan varken välja `school_id` eller roll.
+
+Ett befintligt medlemskonto i samma skola släpps vidare utan en extra profil. Konton i andra skolor flyttas aldrig, och befintliga personal- eller administratörsroller skrivs inte över. Felaktiga kodförsök begränsas per autentiserat konto och skola till tio försök på femton minuter. Detta är pilotskydd och ersätter inte avancerad nätverksbaserad trafikfiltrering.
+
+E-postbekräftelse följer Supabase Auth-inställningen. Om bekräftelse krävs öppnar användaren medlemslänken igen efter bekräftelsen och loggar in. Framtida BankID, SSO, Skolfederation och Microsoft-/Google-inloggning ingår inte i Phase 6.5.
