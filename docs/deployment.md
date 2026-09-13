@@ -26,7 +26,7 @@ När den permanenta produktionsadressen är känd, öppna **Supabase Dashboard �
 
 Lägg bara till Vercels preview-mönster om registreringsflöden verkligen ska testas i preview-deployments. Produktionsdomänen ska anges exakt.
 
-Öppna sedan **Authentication → Email Templates → Confirm signup**. Bekräftelselänken ska använda den redirect-adress som applikationen skickar samt token-hashen:
+Om projektet tillåter redigering av mejlmallar kan **Authentication → Email Templates → Confirm signup** använda redirect-adressen som applikationen skickar samt token-hashen:
 
 ```html
 <a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=email">
@@ -34,7 +34,7 @@ Lägg bara till Vercels preview-mönster om registreringsflöden verkligen ska t
 </a>
 ```
 
-Applikationen skickar alltid en `RedirectTo` med en befintlig `next`-parameter. `/auth/confirm` verifierar token server-side och tillåter endast återgång till en strikt validerad `/invite/<token>`- eller `/join/<slug>`-länk. Övriga mål går till `/login`.
+Supabases standardmall kan i stället återvända med en PKCE-kod. `/auth/confirm` hanterar både engångskoden och token-hashen server-side. Applikationen skickar alltid en `RedirectTo` med en befintlig `next`-parameter och tillåter endast återgång till en strikt validerad `/invite/<token>`- eller `/join/<slug>`-länk. Övriga mål går till `/login`.
 
 Om en extern e-postleverantör senare aktiverar länkspårning bör den funktionen stängas av för autentiseringsmejl så att bekräftelselänkar inte skrivs om.
 

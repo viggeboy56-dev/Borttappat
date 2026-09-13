@@ -8,18 +8,21 @@ function isConfirmationType(value: string | null): value is EmailOtpType {
 }
 
 export async function GET(request: NextRequest) {
+  const code = request.nextUrl.searchParams.get("code");
   const tokenHash = request.nextUrl.searchParams.get("token_hash");
   const type = request.nextUrl.searchParams.get("type");
   const nextPath = getEmailConfirmationNextPath(
     request.nextUrl.searchParams.get("next"),
   );
 
-  if (tokenHash && isConfirmationType(type)) {
+  if (code || (tokenHash && isConfirmationType(type))) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.verifyOtp({
-      token_hash: tokenHash,
-      type,
-    });
+    const { error } = code
+      ? await supabase.auth.exchangeCodeForSession(code)
+      : await supabase.auth.verifyOtp({
+          token_hash: tokenHash!,
+          type: type as EmailOtpType,
+        });
 
     if (!error) return NextResponse.redirect(new URL(nextPath, request.url));
   }
