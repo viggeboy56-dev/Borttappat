@@ -14,6 +14,7 @@
     "test:admin": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test --test-isolation=none tests/admin-validation.test.mjs",
     "test:operator": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test --test-isolation=none tests/operator-validation.test.mjs",
     "test:member-onboarding": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test --test-isolation=none tests/member-onboarding.test.mjs",
+    "test:pwa": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test --test-isolation=none tests/pwa-manifest.test.mjs",
     "operator:grant": "node --env-file=.env.seed.local scripts/grant-operator.mjs",
     "seed:demo": "node --env-file=.env.seed.local scripts/seed-demo.mjs",
     "verify:demo-auth": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --env-file=.env.local --env-file=.env.seed.local scripts/verify-demo-auth.mjs",
