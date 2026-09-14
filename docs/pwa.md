@@ -4,7 +4,9 @@ Borttappat använder Next.js inbyggda stöd för webbmanifest och metadata. Appe
 
 ## Ikon och färger
 
-Den nuvarande appikonen är en enkel version av den befintliga Borttappat-symbolen: ett vitt **B** på produktens mörkgröna bakgrund. Vanliga ikoner skapas i 192 × 192 och 512 × 512 pixlar. En separat maskbar 512 × 512-variant håller symbolen inom Androids säkra yta. iPhone får en särskild 180 × 180 Apple touch-ikon.
+Appikonen använder den officiella Borttappat-symbolen från Illustrator-originalet `borttappad logotyp2.ai`: en vit kartnål med förstoringsglas och mörkgrön skugga på originalets gröna bakgrund. Vanliga ikoner finns i 192 × 192 och 512 × 512 pixlar. En separat maskbar 512 × 512-variant ger originalsymbolen större säkerhetsmarginal för Android. iPhone får en särskild 180 × 180 Apple touch-ikon med samma säkerhetsmarginal.
+
+Illustrator-originalets SHA-256 vid exporten var `4657A066E5D6FE5A2EB4679DAA5190D51C9EF04966EF2111120E3EB44956FFB8`. Symbolens proportioner, färger och detaljer har inte ritats om; endast beskärning med jämn säkerhetsmarginal och skalning till respektive webbformat har gjorts.
 
 ## Service worker och data
 

@@ -13,22 +13,33 @@ test("manifestet innehåller installationskraven", () => {
   assert.equal(result.display, "standalone");
   assert.equal(result.orientation, "portrait-primary");
   assert.equal(result.background_color, "#f7f7f5");
-  assert.equal(result.theme_color, "#065f46");
+  assert.equal(result.theme_color, "#016247");
   assert.equal(result.lang, "sv");
 });
 
 test("manifestet har vanliga och maskbara appikoner", () => {
   const icons = manifest().icons ?? [];
 
-  assert.ok(icons.some((icon) => icon.sizes === "192x192"));
   assert.ok(
     icons.some(
-      (icon) => icon.sizes === "512x512" && icon.purpose === "any",
+      (icon) =>
+        icon.src === "/icons/pwa-192.png" && icon.sizes === "192x192",
     ),
   );
   assert.ok(
     icons.some(
-      (icon) => icon.sizes === "512x512" && icon.purpose === "maskable",
+      (icon) =>
+        icon.src === "/icons/pwa-512.png" &&
+        icon.sizes === "512x512" &&
+        icon.purpose === "any",
+    ),
+  );
+  assert.ok(
+    icons.some(
+      (icon) =>
+        icon.src === "/icons/pwa-maskable-512.png" &&
+        icon.sizes === "512x512" &&
+        icon.purpose === "maskable",
     ),
   );
 });
